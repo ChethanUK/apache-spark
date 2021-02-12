@@ -169,6 +169,7 @@ function build {
     base_img=$(image_ref spark)
   )
 
+  # ./bin/docker-image-tool.sh -r chethanuk -t 3.1.1 -b java_image_tag=11-jre-slim -p chethanuk/spark:3.1.1 build
   local BASEDOCKERFILE=${BASEDOCKERFILE:-"kubernetes/dockerfiles/spark/Dockerfile"}
   local PYDOCKERFILE=${PYDOCKERFILE:-false}
   local RDOCKERFILE=${RDOCKERFILE:-false}

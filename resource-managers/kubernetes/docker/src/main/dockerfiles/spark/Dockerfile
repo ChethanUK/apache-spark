@@ -25,7 +25,7 @@ ARG spark_uid=185
 # If this docker file is being used in the context of building your images from a Spark
 # distribution, the docker build command should be invoked from the top level directory
 # of the Spark distribution. E.g.:
-# docker build -t spark:latest -f kubernetes/dockerfiles/spark/Dockerfile .
+# docker build -t spark:latest -f resource-managers/kubernetes/docker/src/main/dockerfiles/spark/Dockerfile .
 
 RUN set -ex && \
     sed -i 's/http:\/\/deb.\(.*\)/https:\/\/deb.\1/g' /etc/apt/sources.list && \
@@ -45,10 +45,10 @@ RUN set -ex && \
 COPY jars /opt/spark/jars
 COPY bin /opt/spark/bin
 COPY sbin /opt/spark/sbin
-COPY kubernetes/dockerfiles/spark/entrypoint.sh /opt/
-COPY kubernetes/dockerfiles/spark/decom.sh /opt/
+COPY resource-managers/kubernetes/docker/src/main/dockerfiles/spark/entrypoint.sh /opt/
+COPY resource-managers/kubernetes/docker/src/main/dockerfiles/spark/decom.sh /opt/
 COPY examples /opt/spark/examples
-COPY kubernetes/tests /opt/spark/tests
+COPY resource-managers/kubernetes/tests /opt/spark/tests
 COPY data /opt/spark/data
 
 ENV SPARK_HOME /opt/spark
@@ -57,7 +57,9 @@ WORKDIR /opt/spark/work-dir
 RUN chmod g+w /opt/spark/work-dir
 RUN chmod a+x /opt/decom.sh
 
+RUN echo "Spark 3"
+
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
 
 # Specify the User that the actual main process will run as
-USER ${spark_uid}
+# USER ${spark_uid}

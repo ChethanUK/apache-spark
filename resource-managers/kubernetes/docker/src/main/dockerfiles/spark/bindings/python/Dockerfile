@@ -14,21 +14,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
+# Required docker version greater than 17
+ARG PYTHON_VERSION=3.8.7
+ARG PYTHON_IMAGE=python:${PYTHON_VERSION}-slim 
 ARG base_img
 
-FROM $base_img
+FROM ${PYTHON_IMAGE} as python-base
+
+FROM $base_img as build
+
 WORKDIR /
 
 # Reset to root to run installation tasks
 USER 0
 
 RUN mkdir ${SPARK_HOME}/python
-RUN apt-get update && \
-    apt install -y python3 python3-pip && \
-    pip3 install --upgrade pip setuptools && \
-    # Removed the .cache to save space
-    rm -r /root/.cache && rm -rf /var/cache/apt/*
+
+COPY --from=python-base / /
+# RUN apt-get update && \
+#     apt install -y python3 python3-pip && \
+#     pip3 install --upgrade pip setuptools && \
+#     # Removed the .cache to save space
+#     rm -r /root/.cache && rm -rf /var/cache/apt/*
 
 COPY python/pyspark ${SPARK_HOME}/python/pyspark
 COPY python/lib ${SPARK_HOME}/python/lib
